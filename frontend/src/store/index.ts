@@ -5,13 +5,13 @@ import chatSlice from './slices/chatSlice';
 import { api } from './api/index';
 
 export const store = configureStore({
-  reducer: {
-    auth: authSlice,
-    chat: chatSlice,
-    api: api.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+	reducer: {
+		auth: authSlice,
+		chat: chatSlice,
+		api: api.reducer,
+	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware().concat(api.middleware),
 });
 
 setupListeners(store.dispatch);
