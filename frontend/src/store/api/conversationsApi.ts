@@ -53,6 +53,7 @@ export const conversationsApi = api.injectEndpoints({
 			}),
 			invalidatesTags: (_, __, { id }) => [
 				{ type: 'Conversation', id },
+				'Conversation', // This invalidates the list query too
 			],
 		}),
 		deleteConversation: builder.mutation<{ message: string }, number>({
