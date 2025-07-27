@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { User, Bot } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import MessageContent from './MessageContent';
 import type { Message } from '@/types';
 
 interface MessageListProps {
@@ -59,11 +60,10 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
                 : 'bg-muted'
             }`}
           >
-            <div className="prose prose-sm max-w-none">
-              <div className="whitespace-pre-wrap break-words">
-                {message.content}
-              </div>
-            </div>
+            <MessageContent 
+              content={message.content}
+              isUser={message.role === 'user'}
+            />
             <div className={`text-xs mt-2 opacity-70 ${
               message.role === 'user' ? 'text-primary-foreground' : 'text-muted-foreground'
             }`}>
