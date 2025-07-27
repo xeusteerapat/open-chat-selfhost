@@ -53,28 +53,31 @@ export default function ChatInterface() {
           model,
         },
       }).unwrap();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Failed to send message:', error);
       
       let errorMessage = 'Failed to send message. Please try again.';
       
-      if (error?.data?.error) {
-        errorMessage = error.data.error;
-        
-        // Check if it's an API key error
-        if (errorMessage.includes('API key') && errorMessage.includes('not found')) {
-          setError(`Missing API key for ${provider}. Please add your API key to continue.`);
-          toast({
-            title: 'API Key Required',
-            description: `You need to add an API key for ${provider} to send messages.`,
-            variant: 'destructive',
-            action: (
-              <Button asChild variant="outline" size="sm">
-                <Link to="/api-keys">Add API Key</Link>
-              </Button>
-            ),
-          });
-          return;
+      if (error && typeof error === 'object' && 'data' in error) {
+        const errorData = error.data as { error?: string };
+        if (errorData?.error) {
+          errorMessage = errorData.error;
+          
+          // Check if it's an API key error
+          if (errorMessage.includes('API key') && errorMessage.includes('not found')) {
+            setError(`Missing API key for ${provider}. Please add your API key to continue.`);
+            toast({
+              title: 'API Key Required',
+              description: `You need to add an API key for ${provider} to send messages.`,
+              variant: 'destructive',
+              action: (
+                <Button asChild variant="outline" size="sm">
+                  <Link to="/api-keys">Add API Key</Link>
+                </Button>
+              ),
+            });
+            return;
+          }
         }
       }
       

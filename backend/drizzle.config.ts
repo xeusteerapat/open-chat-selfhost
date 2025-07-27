@@ -5,6 +5,6 @@ export default defineConfig({
 	out: './src/db/migrations',
 	dialect: 'postgresql',
 	dbCredentials: {
-		url: process.env.DATABASE_URL || 'postgresql://openchat:openchat_password@database:5432/openchat',
+		url: process.env.DATABASE_URL,
 	},
 });

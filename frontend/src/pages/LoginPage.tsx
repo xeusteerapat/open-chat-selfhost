@@ -99,7 +99,9 @@ export default function LoginPage() {
               </Button>
               {loginError && (
                 <p className="text-sm text-destructive mt-2">
-                  {'data' in loginError ? (loginError.data as any)?.error || 'Login failed' : 'Login failed'}
+                  {'data' in loginError && loginError.data && typeof loginError.data === 'object' && 'error' in loginError.data 
+                    ? (loginError.data.error as string) || 'Login failed' 
+                    : 'Login failed'}
                 </p>
               )}
             </form>
@@ -145,7 +147,9 @@ export default function LoginPage() {
               </Button>
               {registerError && (
                 <p className="text-sm text-destructive mt-2">
-                  {'data' in registerError ? (registerError.data as any)?.error || 'Registration failed' : 'Registration failed'}
+                  {'data' in registerError && registerError.data && typeof registerError.data === 'object' && 'error' in registerError.data 
+                    ? (registerError.data.error as string) || 'Registration failed' 
+                    : 'Registration failed'}
                 </p>
               )}
             </form>

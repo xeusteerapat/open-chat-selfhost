@@ -1,9 +1,9 @@
-import type { FastifyInstance } from 'fastify';
+import { and, eq } from 'drizzle-orm';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { eq, and } from 'drizzle-orm';
 import { apiKeys } from '../db/schema.js';
-import { encryptApiKey, decryptApiKey } from '../utils/crypto.js';
 import type { AuthTokenPayload } from '../types/index.js';
+import { encryptApiKey } from '../utils/crypto.js';
 
 const createApiKeySchema = z.object({
 	provider: z.string().min(1).max(50),
@@ -123,9 +123,15 @@ export default async function apiKeyRoutes(fastify: FastifyInstance) {
 				},
 			},
 		},
-		async (request, reply) => {
+		async (
+			request: FastifyRequest<{
+				Params: { id: string };
+				Body: { keyName?: string; isActive?: boolean };
+			}>,
+			reply
+		) => {
 			const payload = request.user as AuthTokenPayload;
-			const keyId = Number((request.params as any).id);
+			const keyId = Number(request.params.id);
 			const updates = updateApiKeySchema.parse(request.body);
 
 			try {

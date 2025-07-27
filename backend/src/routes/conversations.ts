@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { eq, and, desc } from 'drizzle-orm';
 import { conversations, messages, apiKeys } from '../db/schema.js';
@@ -21,6 +21,14 @@ const sendMessageSchema = z.object({
 	provider: z.string().min(1).max(50),
 	model: z.string().min(1).max(100),
 });
+
+interface ConversationParams {
+	id: string;
+}
+
+interface ProviderParams {
+	provider: string;
+}
 
 export default async function conversationRoutes(fastify: FastifyInstance) {
 	fastify.addHook('preHandler', fastify.authenticate);
@@ -107,9 +115,9 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 				},
 			},
 		},
-		async (request, reply) => {
+		async (request: FastifyRequest<{ Params: ConversationParams }>, reply) => {
 			const payload = request.user as AuthTokenPayload;
-			const conversationId = Number((request.params as any).id);
+			const conversationId = Number(request.params.id);
 
 			try {
 				const [conversation] = await fastify.db
@@ -164,9 +172,15 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 				},
 			},
 		},
-		async (request, reply) => {
+		async (
+			request: FastifyRequest<{
+				Params: ConversationParams;
+				Body: { title?: string };
+			}>,
+			reply
+		) => {
 			const payload = request.user as AuthTokenPayload;
-			const conversationId = Number((request.params as any).id);
+			const conversationId = Number(request.params.id);
 			const updates = updateConversationSchema.parse(request.body);
 
 			try {
@@ -207,9 +221,9 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 				},
 			},
 		},
-		async (request, reply) => {
+		async (request: FastifyRequest<{ Params: ConversationParams }>, reply) => {
 			const payload = request.user as AuthTokenPayload;
-			const conversationId = Number((request.params as any).id);
+			const conversationId = Number(request.params.id);
 
 			try {
 				await fastify.db
@@ -261,9 +275,15 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 				},
 			},
 		},
-		async (request, reply) => {
+		async (
+			request: FastifyRequest<{
+				Params: ConversationParams;
+				Body: { content: string; provider: string; model: string };
+			}>,
+			reply
+		) => {
 			const payload = request.user as AuthTokenPayload;
-			const conversationId = Number((request.params as any).id);
+			const conversationId = Number(request.params.id);
 			const { content, provider, model } = sendMessageSchema.parse(
 				request.body
 			);
@@ -323,14 +343,17 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 					.where(eq(messages.conversationId, conversationId))
 					.orderBy(messages.createdAt);
 
-				// Add the new user message to history  
-				const allMessages = [...conversationHistory.map(msg => ({
-					...msg,
-					role: msg.role as 'user' | 'assistant' | 'system'
-				})), {
-					...userMessage,
-					role: userMessage.role as 'user' | 'assistant' | 'system'
-				}];
+				// Add the new user message to history
+				const allMessages = [
+					...conversationHistory.map((msg) => ({
+						...msg,
+						role: msg.role as 'user' | 'assistant' | 'system',
+					})),
+					{
+						...userMessage,
+						role: userMessage.role as 'user' | 'assistant' | 'system',
+					},
+				];
 
 				// Generate AI response
 				try {

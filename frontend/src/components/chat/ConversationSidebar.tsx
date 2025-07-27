@@ -75,7 +75,7 @@ export default function ConversationSidebar({
     setEditTitle(conversation.title);
   };
 
-  const handleSaveEdit = async (conversationId: number, e: React.MouseEvent) => {
+  const handleSaveEdit = async (conversationId: number, e: React.MouseEvent | React.KeyboardEvent) => {
     e.stopPropagation();
     
     if (!editTitle.trim()) {
@@ -95,7 +95,7 @@ export default function ConversationSidebar({
     }
   };
 
-  const handleCancelEdit = (e: React.MouseEvent) => {
+  const handleCancelEdit = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.stopPropagation();
     setEditingId(null);
     setEditTitle('');
@@ -104,10 +104,10 @@ export default function ConversationSidebar({
   const handleTitleKeyDown = (e: React.KeyboardEvent, conversationId: number) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleSaveEdit(conversationId, e as any);
+      handleSaveEdit(conversationId, e);
     } else if (e.key === 'Escape') {
       e.preventDefault();
-      handleCancelEdit(e as any);
+      handleCancelEdit(e);
     }
   };
 

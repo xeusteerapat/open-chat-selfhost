@@ -28,7 +28,7 @@ export interface Message {
   conversationId: number;
   role: 'user' | 'assistant' | 'system';
   content: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   createdAt: string;
 }
 

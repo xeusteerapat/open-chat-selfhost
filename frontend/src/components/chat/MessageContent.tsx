@@ -130,14 +130,17 @@ export default function MessageContent({ content, isUser = false, className }: M
             }
             
             // Extract plain text from React children
-            const getTextContent = (element: any): string => {
-              if (typeof element === 'string') {
-                return element;
+            const getTextContent = (element: React.ReactNode): string => {
+              if (element === null || element === undefined || typeof element === 'boolean') {
+                return '';
+              }
+              if (typeof element === 'string' || typeof element === 'number') {
+                return String(element);
               }
               if (Array.isArray(element)) {
                 return element.map(getTextContent).join('');
               }
-              if (element && element.props && element.props.children) {
+              if (element && typeof element === 'object' && 'props' in element && element.props?.children) {
                 return getTextContent(element.props.children);
               }
               return '';

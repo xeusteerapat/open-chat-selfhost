@@ -61,7 +61,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 				const token = fastify.jwt.sign({
 					userId: newUser.id,
 					username: newUser.username,
-				} as AuthTokenPayload);
+				} satisfies AuthTokenPayload);
 
 				reply.send({
 					user: {
@@ -110,7 +110,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 				const token = fastify.jwt.sign({
 					userId: user.id,
 					username: user.username,
-				} as AuthTokenPayload);
+				} satisfies AuthTokenPayload);
 
 				reply.send({
 					user: {
