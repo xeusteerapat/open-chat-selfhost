@@ -20,7 +20,6 @@ const schema = {
 		},
 		DATABASE_URL: {
 			type: 'string',
-			default: './data/chat.db',
 		},
 		JWT_SECRET: {
 			type: 'string',
