@@ -25,6 +25,7 @@ export default function ApiKeysPage() {
     { id: 'openai', name: 'OpenAI', description: 'GPT-3.5, GPT-4, and other OpenAI models' },
     { id: 'anthropic', name: 'Anthropic', description: 'Claude models' },
     { id: 'openrouter', name: 'OpenRouter', description: 'Access to multiple AI models' },
+    { id: 'ollama', name: 'Ollama', description: 'Local models via Ollama server' },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,7 +34,7 @@ export default function ApiKeysPage() {
     if (!newKeyData.provider || !newKeyData.keyName || !newKeyData.apiKey) {
       toast({
         title: 'Error',
-        description: 'Please fill in all fields',
+        description: `Please fill in all fields${newKeyData.provider === 'ollama' ? ' (use http://localhost:11434 for local Ollama)' : ''}`,
         variant: 'destructive',
       });
       return;
@@ -158,14 +159,25 @@ export default function ApiKeysPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="key">API Key</Label>
+                  <Label htmlFor="key">
+                    {newKeyData.provider === 'ollama' ? 'Server URL' : 'API Key'}
+                  </Label>
                   <Input
                     id="key"
-                    type="password"
-                    placeholder="Enter your API key"
+                    type={newKeyData.provider === 'ollama' ? 'url' : 'password'}
+                    placeholder={
+                      newKeyData.provider === 'ollama' 
+                        ? 'http://localhost:11434' 
+                        : 'Enter your API key'
+                    }
                     value={newKeyData.apiKey}
                     onChange={(e) => setNewKeyData({ ...newKeyData, apiKey: e.target.value })}
                   />
+                  {newKeyData.provider === 'ollama' && (
+                    <p className="text-sm text-muted-foreground">
+                      Enter the URL of your Ollama server. Use default port 11434 for local installations.
+                    </p>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <Button type="submit" disabled={isCreating}>
@@ -218,7 +230,7 @@ export default function ApiKeysPage() {
                       </div>
                       <div className="mt-2">
                         <code className="text-sm bg-muted px-2 py-1 rounded text-muted-foreground">
-                          API key is securely stored
+                          {apiKey.provider === 'ollama' ? 'Server URL is securely stored' : 'API key is securely stored'}
                         </code>
                       </div>
                     </div>

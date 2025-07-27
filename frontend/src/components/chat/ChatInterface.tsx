@@ -63,16 +63,20 @@ export default function ChatInterface() {
         if (errorData?.error) {
           errorMessage = errorData.error;
           
-          // Check if it's an API key error
-          if (errorMessage.includes('API key') && errorMessage.includes('not found')) {
-            setError(`Missing API key for ${provider}. Please add your API key to continue.`);
+          // Check if it's an API key or server error
+          if ((errorMessage.includes('API key') && errorMessage.includes('not found')) || 
+              (provider === 'ollama' && (errorMessage.includes('server') || errorMessage.includes('connection')))) {
+            const isOllama = provider === 'ollama';
+            setError(`Missing ${isOllama ? 'server URL' : 'API key'} for ${provider}. Please add your ${isOllama ? 'server URL' : 'API key'} to continue.`);
             toast({
-              title: 'API Key Required',
-              description: `You need to add an API key for ${provider} to send messages.`,
+              title: isOllama ? 'Ollama Server Required' : 'API Key Required',
+              description: isOllama 
+                ? `You need to configure your Ollama server URL to send messages.`
+                : `You need to add an API key for ${provider} to send messages.`,
               variant: 'destructive',
               action: (
                 <Button asChild variant="outline" size="sm">
-                  <Link to="/api-keys">Add API Key</Link>
+                  <Link to="/api-keys">{isOllama ? 'Add Server URL' : 'Add API Key'}</Link>
                 </Button>
               ),
             });
