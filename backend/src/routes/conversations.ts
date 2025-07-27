@@ -51,7 +51,7 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 			},
 		},
 		async (request, reply) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 			const { title, provider, model } = createConversationSchema.parse(
 				request.body
 			);
@@ -84,7 +84,7 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 			},
 		},
 		async (request, reply) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 
 			try {
 				const userConversations = await fastify.db
@@ -116,7 +116,7 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 			},
 		},
 		async (request: FastifyRequest<{ Params: ConversationParams }>, reply) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 			const conversationId = Number(request.params.id);
 
 			try {
@@ -179,7 +179,7 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 			}>,
 			reply
 		) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 			const conversationId = Number(request.params.id);
 			const updates = updateConversationSchema.parse(request.body);
 
@@ -222,7 +222,7 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 			},
 		},
 		async (request: FastifyRequest<{ Params: ConversationParams }>, reply) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 			const conversationId = Number(request.params.id);
 
 			try {
@@ -282,7 +282,7 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 			}>,
 			reply
 		) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 			const conversationId = Number(request.params.id);
 			const { content, provider, model } = sendMessageSchema.parse(
 				request.body

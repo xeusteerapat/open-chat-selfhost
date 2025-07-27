@@ -1,4 +1,4 @@
-import Fastify from 'fastify';
+import Fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
 import websocket from '@fastify/websocket';
 import { createDatabase } from './db/index.js';
@@ -10,6 +10,7 @@ import apiKeyRoutes from './routes/apiKeys.js';
 import conversationRoutes from './routes/conversations.js';
 import providerRoutes from './routes/providers.js';
 import { setEncryptionKey } from './utils/crypto.js';
+import type { AuthTokenPayload } from './types/index.js';
 
 const fastify = Fastify({
 	logger: {
@@ -24,6 +25,13 @@ declare module 'fastify' {
 			request: FastifyRequest,
 			reply: FastifyReply
 		) => Promise<void>;
+	}
+}
+
+declare module '@fastify/jwt' {
+	interface FastifyJWT {
+		payload: AuthTokenPayload;
+		user: AuthTokenPayload;
 	}
 }
 

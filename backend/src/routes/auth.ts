@@ -137,7 +137,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
 			},
 		},
 		async (request, reply) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 
 			try {
 				const [user] = await fastify.db

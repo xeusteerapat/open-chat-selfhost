@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { apiKeys } from '../db/schema.js';
 import type { AuthTokenPayload } from '../types/index.js';
@@ -37,8 +37,8 @@ export default async function apiKeyRoutes(fastify: FastifyInstance) {
 				},
 			},
 		},
-		async (request, reply) => {
-			const payload = request.user as AuthTokenPayload;
+		async (request: FastifyRequest, reply: FastifyReply) => {
+			const payload = request.user;
 			const { provider, keyName, apiKey } = createApiKeySchema.parse(
 				request.body
 			);
@@ -79,7 +79,7 @@ export default async function apiKeyRoutes(fastify: FastifyInstance) {
 			},
 		},
 		async (request, reply) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 
 			try {
 				const userApiKeys = await fastify.db
@@ -130,7 +130,7 @@ export default async function apiKeyRoutes(fastify: FastifyInstance) {
 			}>,
 			reply
 		) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 			const keyId = Number(request.params.id);
 			const updates = updateApiKeySchema.parse(request.body);
 
@@ -182,7 +182,7 @@ export default async function apiKeyRoutes(fastify: FastifyInstance) {
 			},
 		},
 		async (request, reply) => {
-			const payload = request.user as AuthTokenPayload;
+			const payload = request.user;
 			const keyId = Number((request.params as any).id);
 
 			try {
