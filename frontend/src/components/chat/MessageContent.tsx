@@ -71,7 +71,22 @@ export default function MessageContent({ content, isUser = false, className }: M
 
   const copyToClipboard = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      // Check if clipboard API is available
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        // Fallback method for older browsers or when clipboard is not available
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
       setCopiedText(text);
       setTimeout(() => setCopiedText(null), 2000);
     } catch (err) {
@@ -114,11 +129,25 @@ export default function MessageContent({ content, isUser = false, className }: M
               );
             }
             
-            const codeString = String(children).replace(/\n$/, '');
+            // Extract plain text from React children
+            const getTextContent = (element: any): string => {
+              if (typeof element === 'string') {
+                return element;
+              }
+              if (Array.isArray(element)) {
+                return element.map(getTextContent).join('');
+              }
+              if (element && element.props && element.props.children) {
+                return getTextContent(element.props.children);
+              }
+              return '';
+            };
+            
+            const codeString = getTextContent(children).replace(/\n$/, '');
             
             return (
-              <div className="code-block-wrapper relative group">
-                <div className="flex items-center justify-between mb-2">
+              <div className="code-block-wrapper relative group border border-border rounded-lg overflow-hidden">
+                <div className="flex items-center justify-between p-3 bg-muted/50 border-b border-border">
                   {language && (
                     <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
                       {language}
@@ -137,7 +166,7 @@ export default function MessageContent({ content, isUser = false, className }: M
                     )}
                   </Button>
                 </div>
-                <pre className="overflow-x-auto">
+                <pre className="overflow-x-auto p-4 bg-muted/20">
                   <code className={className} {...props}>
                     {children}
                   </code>
