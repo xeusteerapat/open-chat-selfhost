@@ -5,14 +5,11 @@ import { migrate } from 'drizzle-orm/postgres-js/migrator';
 
 export type DatabaseInstance = ReturnType<typeof drizzle>;
 
-export async function createDatabase(connectionString?: string): Promise<{
+export async function createDatabase(connectionString: string): Promise<{
 	db: DatabaseInstance;
 	client: postgres.Sql;
 }> {
-	const databaseUrl =
-		connectionString ||
-		process.env.DATABASE_URL ||
-		'postgresql://postgres:postgres@localhost:5432/openchat';
+	const databaseUrl = connectionString;
 
 	const migrationClient = postgres(databaseUrl, { max: 1 });
 	const queryClient = postgres(databaseUrl);
