@@ -1,4 +1,13 @@
-import { pgTable, serial, integer, varchar, text, timestamp, boolean, jsonb } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	integer,
+	varchar,
+	text,
+	timestamp,
+	boolean,
+	jsonb,
+} from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const users = pgTable('users', {
