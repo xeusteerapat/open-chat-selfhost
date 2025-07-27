@@ -1,8 +1,7 @@
+import { and, desc, eq } from 'drizzle-orm';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { eq, and, desc } from 'drizzle-orm';
-import { conversations, messages, apiKeys } from '../db/schema.js';
-import type { AuthTokenPayload } from '../types/index.js';
+import { apiKeys, conversations, messages } from '../db/schema.js';
 import { aiProviderManager } from '../services/aiProviders.js';
 import { decryptApiKey } from '../utils/crypto.js';
 

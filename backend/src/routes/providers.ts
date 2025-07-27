@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { Provider } from '../types/index.js';
 
 const providers: Provider[] = [
@@ -92,8 +92,11 @@ export default async function providerRoutes(fastify: FastifyInstance) {
 				},
 			},
 		},
-		async (request, reply) => {
-			const providerId = (request.params as any).provider;
+		async (
+			request: FastifyRequest<{ Params: { provider: string } }>,
+			reply
+		) => {
+			const providerId = request.params.provider;
 
 			const provider = providers.find((p) => p.id === providerId);
 

@@ -2,7 +2,6 @@ import { and, eq } from 'drizzle-orm';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { apiKeys } from '../db/schema.js';
-import type { AuthTokenPayload } from '../types/index.js';
 import { encryptApiKey } from '../utils/crypto.js';
 
 const createApiKeySchema = z.object({
@@ -181,9 +180,9 @@ export default async function apiKeyRoutes(fastify: FastifyInstance) {
 				},
 			},
 		},
-		async (request, reply) => {
+		async (request: FastifyRequest<{ Params: { id: number } }>, reply) => {
 			const payload = request.user;
-			const keyId = Number((request.params as any).id);
+			const keyId = Number(request.params.id);
 
 			try {
 				const [deletedKey] = await fastify.db
