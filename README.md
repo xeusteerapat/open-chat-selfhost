@@ -69,7 +69,7 @@ A comprehensive AI chat application similar to OpenWebUI with multi-provider sup
 
 2. **Access the application:**
    - Frontend: http://localhost:3000
-   - Backend API: http://localhost:3001
+   - Backend API: http://localhost:3000
 
 ## Configuration
 
@@ -78,7 +78,7 @@ A comprehensive AI chat application similar to OpenWebUI with multi-provider sup
 **Backend (.env):**
 ```env
 NODE_ENV=development
-PORT=3001
+PORT=3000
 DATABASE_URL=postgresql://openchat:openchat_password@localhost:5432/openchat
 JWT_SECRET=your-super-secret-jwt-key
 ```
