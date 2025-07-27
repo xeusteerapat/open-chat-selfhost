@@ -53,6 +53,11 @@ const providers: Provider[] = [
 				name: 'Llama 2 70B Chat',
 				maxTokens: 4096,
 			},
+			{
+				id: 'qwen/qwen3-coder',
+				name: 'Qwen3 Coder',
+				maxTokens: 4096,
+			},
 		],
 	},
 ];

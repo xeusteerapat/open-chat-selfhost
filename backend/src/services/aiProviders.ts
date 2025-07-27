@@ -71,7 +71,7 @@ export class OpenAIProvider implements AIProvider {
 			);
 		}
 
-		const data = await response.json() as OpenAIResponse;
+		const data = (await response.json()) as OpenAIResponse;
 		return data.choices[0]?.message?.content || 'No response generated';
 	}
 }
@@ -110,7 +110,7 @@ export class AnthropicProvider implements AIProvider {
 			);
 		}
 
-		const data = await response.json() as AnthropicResponse;
+		const data = (await response.json()) as AnthropicResponse;
 		return data.content[0]?.text || 'No response generated';
 	}
 }
@@ -140,7 +140,6 @@ export class OpenRouterProvider implements AIProvider {
 				body: JSON.stringify({
 					model,
 					messages: openrouterMessages,
-					max_tokens: 1000,
 					temperature: 0.7,
 				}),
 			}
@@ -152,7 +151,7 @@ export class OpenRouterProvider implements AIProvider {
 			);
 		}
 
-		const data = await response.json() as OpenRouterResponse;
+		const data = (await response.json()) as OpenRouterResponse;
 		return data.choices[0]?.message?.content || 'No response generated';
 	}
 }
