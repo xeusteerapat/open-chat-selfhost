@@ -20,7 +20,10 @@ const fastify = Fastify({
 declare module 'fastify' {
 	interface FastifyInstance {
 		db: Awaited<ReturnType<typeof createDatabase>>['db'];
-		authenticate: (request: any, reply: any) => Promise<void>;
+		authenticate: (
+			request: FastifyRequest,
+			reply: FastifyReply
+		) => Promise<void>;
 	}
 }
 
