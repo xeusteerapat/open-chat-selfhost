@@ -9,7 +9,7 @@ export const providersApi = api.injectEndpoints({
 		}),
 		getProviderModels: builder.query<Model[], string>({
 			query: (provider) => `/providers/${provider}/models`,
-			providesTags: (result, error, provider) => [
+			providesTags: (_, __, provider) => [
 				{ type: 'Provider', id: provider },
 			],
 		}),

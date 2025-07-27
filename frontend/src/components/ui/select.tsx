@@ -39,7 +39,7 @@ const Select = ({ value, onValueChange, children }: SelectProps) => {
 
 const SelectTrigger = React.forwardRef<
   HTMLButtonElement,
-  React.HTMLAttributes<HTMLButtonElement> & { placeholder?: string }
+  React.ButtonHTMLAttributes<HTMLButtonElement> & { placeholder?: string }
 >(({ className, children, placeholder, ...props }, ref) => {
   const { open, setOpen } = useSelect();
   

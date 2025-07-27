@@ -25,8 +25,8 @@ export default function MessageInput({
 
   useEffect(() => {
     if (providers.length > 0 && !selectedProvider) {
-      setSelectedProvider(providers[0].id);
-      setSelectedModel(providers[0].models[0]?.id || '');
+      setSelectedProvider(providers[0]?.id || '');
+      setSelectedModel(providers[0]?.models[0]?.id || '');
     }
   }, [providers, selectedProvider]);
 

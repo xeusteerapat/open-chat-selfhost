@@ -36,7 +36,7 @@ export const apiKeysApi = api.injectEndpoints({
 				method: 'PUT',
 				body: data,
 			}),
-			invalidatesTags: (result, error, { id }) => [{ type: 'ApiKey', id }],
+			invalidatesTags: (_, __, { id }) => [{ type: 'ApiKey', id }],
 		}),
 		deleteApiKey: builder.mutation<{ message: string }, number>({
 			query: (id) => ({

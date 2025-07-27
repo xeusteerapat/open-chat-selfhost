@@ -96,10 +96,12 @@ export default function MessageContent({ content, isUser = false, className }: M
         rehypePlugins={[rehypeHighlight]}
         components={{
           // Customize code block styling
-          code: ({ node, inline, className, children, ...props }) => {
+          code: ({ node, className, children, ...props }) => {
             const match = /language-(\w+)/.exec(className || '');
             const language = match ? match[1] : '';
             
+            // Check if it's inline code based on props or other criteria
+            const inline = !className?.includes('language-');
             
             if (inline) {
               return (

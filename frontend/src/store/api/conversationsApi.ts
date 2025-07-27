@@ -29,7 +29,7 @@ export const conversationsApi = api.injectEndpoints({
 		}),
 		getConversation: builder.query<ConversationWithMessages, number>({
 			query: (id) => `/conversations/${id}`,
-			providesTags: (result, error, id) => [{ type: 'Conversation', id }],
+			providesTags: (_, __, id) => [{ type: 'Conversation', id }],
 		}),
 		createConversation: builder.mutation<
 			Conversation,
@@ -51,7 +51,7 @@ export const conversationsApi = api.injectEndpoints({
 				method: 'PUT',
 				body: data,
 			}),
-			invalidatesTags: (result, error, { id }) => [
+			invalidatesTags: (_, __, { id }) => [
 				{ type: 'Conversation', id },
 			],
 		}),
@@ -71,7 +71,7 @@ export const conversationsApi = api.injectEndpoints({
 				method: 'POST',
 				body: data,
 			}),
-			invalidatesTags: (result, error, { conversationId }) => [
+			invalidatesTags: (_, __, { conversationId }) => [
 				{ type: 'Conversation', id: conversationId },
 			],
 		}),
