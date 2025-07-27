@@ -54,7 +54,7 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
           )}
           
           <Card
-            className={`max-w-[70%] p-4 ${
+            className={`max-w-[70%] p-5 ${
               message.role === 'user'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted'
@@ -64,7 +64,7 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
               content={message.content}
               isUser={message.role === 'user'}
             />
-            <div className={`text-xs mt-2 opacity-70 ${
+            <div className={`text-xs mt-3 opacity-70 ${
               message.role === 'user' ? 'text-primary-foreground' : 'text-muted-foreground'
             }`}>
               {new Date(message.createdAt).toLocaleTimeString()}
@@ -84,7 +84,7 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
             <Bot className="w-4 h-4 text-primary-foreground" />
           </div>
-          <Card className="bg-muted p-4">
+          <Card className="bg-muted p-5">
             <div className="flex space-x-1">
               <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
               <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>

@@ -105,7 +105,7 @@ export default function MessageContent({ content, isUser = false, className }: M
 
   // For AI messages, render as markdown with syntax highlighting
   return (
-    <div className={cn("prose prose-sm max-w-none dark:prose-invert", className)}>
+    <div className={cn("prose prose-sm max-w-none dark:prose-invert leading-relaxed", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
@@ -121,7 +121,7 @@ export default function MessageContent({ content, isUser = false, className }: M
             if (inline) {
               return (
                 <code
-                  className="px-1.5 py-0.5 rounded bg-muted text-sm font-mono"
+                  className="px-2 py-1 rounded bg-muted text-sm font-mono leading-relaxed"
                   {...props}
                 >
                   {children}
@@ -169,8 +169,8 @@ export default function MessageContent({ content, isUser = false, className }: M
                     )}
                   </Button>
                 </div>
-                <pre className="overflow-x-auto p-4 bg-muted/20">
-                  <code className={className} {...props}>
+                <pre className="overflow-x-auto p-6 bg-muted/20 leading-relaxed">
+                  <code className={cn(className, "block leading-relaxed text-sm")} {...props}>
                     {children}
                   </code>
                 </pre>
