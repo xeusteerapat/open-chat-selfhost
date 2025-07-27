@@ -292,8 +292,6 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 						conversationId,
 						role: 'user',
 						content,
-						provider,
-						model,
 					})
 					.returning();
 
@@ -325,8 +323,14 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 					.where(eq(messages.conversationId, conversationId))
 					.orderBy(messages.createdAt);
 
-				// Add the new user message to history
-				const allMessages = [...conversationHistory, userMessage];
+				// Add the new user message to history  
+				const allMessages = [...conversationHistory.map(msg => ({
+					...msg,
+					role: msg.role as 'user' | 'assistant' | 'system'
+				})), {
+					...userMessage,
+					role: userMessage.role as 'user' | 'assistant' | 'system'
+				}];
 
 				// Generate AI response
 				try {
@@ -344,8 +348,6 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 							conversationId,
 							role: 'assistant',
 							content: aiResponse,
-							provider,
-							model,
 						})
 						.returning();
 				} catch (aiError) {
@@ -357,8 +359,6 @@ export default async function conversationRoutes(fastify: FastifyInstance) {
 						content: `Error generating response: ${
 							aiError instanceof Error ? aiError.message : 'Unknown error'
 						}`,
-						provider,
-						model,
 					});
 				}
 

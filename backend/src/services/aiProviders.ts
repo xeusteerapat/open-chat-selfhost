@@ -15,6 +15,28 @@ export interface OpenAIMessage {
 	content: string;
 }
 
+export interface OpenAIResponse {
+	choices: {
+		message: {
+			content: string;
+		};
+	}[];
+}
+
+export interface AnthropicResponse {
+	content: {
+		text: string;
+	}[];
+}
+
+export interface OpenRouterResponse {
+	choices: {
+		message: {
+			content: string;
+		};
+	}[];
+}
+
 export class OpenAIProvider implements AIProvider {
 	id = 'openai';
 	name = 'OpenAI';
@@ -49,7 +71,7 @@ export class OpenAIProvider implements AIProvider {
 			);
 		}
 
-		const data = await response.json();
+		const data = await response.json() as OpenAIResponse;
 		return data.choices[0]?.message?.content || 'No response generated';
 	}
 }
@@ -88,7 +110,7 @@ export class AnthropicProvider implements AIProvider {
 			);
 		}
 
-		const data = await response.json();
+		const data = await response.json() as AnthropicResponse;
 		return data.content[0]?.text || 'No response generated';
 	}
 }
@@ -130,7 +152,7 @@ export class OpenRouterProvider implements AIProvider {
 			);
 		}
 
-		const data = await response.json();
+		const data = await response.json() as OpenRouterResponse;
 		return data.choices[0]?.message?.content || 'No response generated';
 	}
 }
