@@ -188,7 +188,15 @@ export class OllamaProvider implements AIProvider {
       },
       body: JSON.stringify({
         model,
-        messages: ollamaMessages,
+        messages: [
+          {
+            role: "system",
+            content:
+              "Answer directly and concisely. Do not show your reasoning process.",
+          },
+          ...ollamaMessages,
+        ],
+        think: false,
         stream: false,
       }),
     });

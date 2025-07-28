@@ -40,7 +40,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    command: sh -c "pnpm run build && pnpm run db:migrate && pnpm start"
+    command: pnpm run dev
 
   frontend:
     build:
