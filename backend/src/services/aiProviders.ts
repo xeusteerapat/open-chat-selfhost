@@ -1,4 +1,4 @@
-import type { Message } from "../types/index.js";
+import type { Message } from '../types/index.js';
 
 export interface AIProvider {
   id: string;
@@ -11,7 +11,7 @@ export interface AIProvider {
 }
 
 export interface OpenAIMessage {
-  role: "user" | "assistant" | "system";
+  role: 'user' | 'assistant' | 'system';
   content: string;
 }
 
@@ -45,8 +45,8 @@ export interface OllamaResponse {
 }
 
 export class OpenAIProvider implements AIProvider {
-  id = "openai";
-  name = "OpenAI";
+  id = 'openai';
+  name = 'OpenAI';
 
   async generateResponse(
     messages: Message[],
@@ -54,15 +54,15 @@ export class OpenAIProvider implements AIProvider {
     apiKey: string
   ): Promise<string> {
     const openaiMessages: OpenAIMessage[] = messages.map((msg) => ({
-      role: msg.role === "user" ? "user" : "assistant",
+      role: msg.role === 'user' ? 'user' : 'assistant',
       content: msg.content,
     }));
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         model,
@@ -79,13 +79,13 @@ export class OpenAIProvider implements AIProvider {
     }
 
     const data = (await response.json()) as OpenAIResponse;
-    return data.choices[0]?.message?.content || "No response generated";
+    return data.choices[0]?.message?.content || 'No response generated';
   }
 }
 
 export class AnthropicProvider implements AIProvider {
-  id = "anthropic";
-  name = "Anthropic";
+  id = 'anthropic';
+  name = 'Anthropic';
 
   async generateResponse(
     messages: Message[],
@@ -93,16 +93,16 @@ export class AnthropicProvider implements AIProvider {
     apiKey: string
   ): Promise<string> {
     const anthropicMessages = messages.map((msg) => ({
-      role: msg.role === "user" ? "user" : "assistant",
+      role: msg.role === 'user' ? 'user' : 'assistant',
       content: msg.content,
     }));
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
       headers: {
-        "x-api-key": apiKey,
-        "Content-Type": "application/json",
-        "anthropic-version": "2023-06-01",
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
         model,
@@ -118,13 +118,13 @@ export class AnthropicProvider implements AIProvider {
     }
 
     const data = (await response.json()) as AnthropicResponse;
-    return data.content[0]?.text || "No response generated";
+    return data.content[0]?.text || 'No response generated';
   }
 }
 
 export class OpenRouterProvider implements AIProvider {
-  id = "openrouter";
-  name = "OpenRouter";
+  id = 'openrouter';
+  name = 'OpenRouter';
 
   async generateResponse(
     messages: Message[],
@@ -132,17 +132,17 @@ export class OpenRouterProvider implements AIProvider {
     apiKey: string
   ): Promise<string> {
     const openrouterMessages = messages.map((msg) => ({
-      role: msg.role === "user" ? "user" : "assistant",
+      role: msg.role === 'user' ? 'user' : 'assistant',
       content: msg.content,
     }));
 
     const response = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
+      'https://openrouter.ai/api/v1/chat/completions',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           model,
@@ -159,13 +159,13 @@ export class OpenRouterProvider implements AIProvider {
     }
 
     const data = (await response.json()) as OpenRouterResponse;
-    return data.choices[0]?.message?.content || "No response generated";
+    return data.choices[0]?.message?.content || 'No response generated';
   }
 }
 
 export class OllamaProvider implements AIProvider {
-  id = "ollama";
-  name = "Ollama";
+  id = 'ollama';
+  name = 'Ollama';
 
   async generateResponse(
     messages: Message[],
@@ -175,24 +175,29 @@ export class OllamaProvider implements AIProvider {
     // For Ollama, apiKey is actually the base URL (e.g., "http://localhost:11434")
     // If no apiKey provided, use the environment variable or default
     const baseUrl =
-      apiKey || process.env.OLLAMA_BASE_URL || "http://localhost:11434";
+      apiKey || process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
     const ollamaMessages = messages.map((msg) => ({
-      role: msg.role === "user" ? "user" : "assistant",
+      role: msg.role === 'user' ? 'user' : 'assistant',
       content: msg.content,
     }));
 
+    // Add timeout handling for slow Ollama responses
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minutes
+
     const response = await fetch(`${baseUrl}/api/chat`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
+      signal: controller.signal,
       body: JSON.stringify({
         model,
         messages: [
           {
-            role: "system",
+            role: 'system',
             content:
-              "Answer directly and concisely. Do not show your reasoning process.",
+              'Answer directly and concisely. Do not show your reasoning process.',
           },
           ...ollamaMessages,
         ],
@@ -201,6 +206,8 @@ export class OllamaProvider implements AIProvider {
       }),
     });
 
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
       throw new Error(
         `Ollama API error: ${response.status} ${response.statusText}`
@@ -208,7 +215,7 @@ export class OllamaProvider implements AIProvider {
     }
 
     const data = (await response.json()) as OllamaResponse;
-    return data.message?.content || "No response generated";
+    return data.message?.content || 'No response generated';
   }
 }
 

@@ -16,6 +16,9 @@ const fastify = Fastify({
 	logger: {
 		level: process.env.NODE_ENV === 'production' ? 'warn' : 'info',
 	},
+	connectionTimeout: 300000, // 5 minutes
+	keepAliveTimeout: 5000,
+	requestTimeout: 300000, // 5 minutes for slow Ollama responses
 });
 
 declare module 'fastify' {
